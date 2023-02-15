@@ -1,9 +1,14 @@
 #!/bin/sh
+set -eux
 
-# Create not root user
-groupadd --gid "$GID" php-cli -f
-adduser --uid "$UID" --disabled-password --gid "$GID" --shell /bin/bash --home /home/php-cli php-cli --force --gecos ""
+UPLOAD_MAX_SIZE=25M
+LOG_TO_STDERR=true
+MEMORY_LIMIT=128M
+SECURE_COOKIES=true
 
+# Create not root php-cli
+# groupadd --gid "$GID" php-cli -f
+# addphp-cli --uid "$UID" --disabled-password --gid "$GID" --shell /bin/bash --home /home/php-cli php-cli --force --gecos ""
 
 # Set attachment size limit
 sed -i "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /usr/local/etc/php-fpm.d/php-fpm.conf /etc/nginx/nginx.conf
@@ -17,7 +22,7 @@ if [ "$LOG_TO_STDERR" = true ]; then
 fi
 
 # Secure cookies
-if [ "${SECURE_COOKIES}" = true ]; then
+if [ "${SECURE_COOKIES}" = 'true' ]; then
     echo "[INFO] Secure cookies activated"
         {
         	echo 'session.cookie_httponly = On';
@@ -35,34 +40,37 @@ if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
 fi
 
 # Enable output of snappymail logs
-if [ "${LOG_TO_STDERR}" = true ]; then
-  sed -z 's/\; Enable logging\nenable = Off/\; Enable logging\nenable = On/' -i $SNAPPYMAIL_CONFIG_FILE
+if [ "${LOG_TO_STDERR}" = 'true' ]; then
+  sed 's/\; Enable logging\nenable = Off/\; Enable logging\nenable = On/' -i $SNAPPYMAIL_CONFIG_FILE
   sed 's/^filename = .*/filename = "errors.log"/' -i $SNAPPYMAIL_CONFIG_FILE
   sed 's/^write_on_error_only = .*/write_on_error_only = Off/' -i $SNAPPYMAIL_CONFIG_FILE
   sed 's/^write_on_php_error_only = .*/write_on_php_error_only = On/' -i $SNAPPYMAIL_CONFIG_FILE
 else
-    sed -z 's/\; Enable logging\nenable = On/\; Enable logging\nenable = Off/' -i $SNAPPYMAIL_CONFIG_FILE
+    sed 's/\; Enable logging\nenable = On/\; Enable logging\nenable = Off/' -i $SNAPPYMAIL_CONFIG_FILE
 fi
 # Always enable snappymail Auth logging
 sed 's/^auth_logging = .*/auth_logging = On/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_filename = .*/auth_logging_filename = "auth.log"/' -i $SNAPPYMAIL_CONFIG_FILE
-sed 's/^auth_logging_format = .*/auth_logging_format = "[{date:Y-m-d H:i:s}] Auth failed: ip={request:ip} user={imap:login} host={imap:host} port={imap:port}"/' -i $SNAPPYMAIL_CONFIG_FILE
+sed 's/^auth_logging_format = .*/auth_logging_format = "[{date:Y-m-d H:i:s}] Auth failed: ip={request:ip} php-cli={imap:login} host={imap:host} port={imap:port}"/' -i $SNAPPYMAIL_CONFIG_FILE
 # Redirect snappymail logs to stderr /stdout
 mkdir -p /snappymail/data/_data_/_default_/logs/
 # empty logs
 cp /dev/null /snappymail/data/_data_/_default_/logs/errors.log
 cp /dev/null /snappymail/data/_data_/_default_/logs/auth.log
-chown -R php-cli:php-cli /snappymail/data/
+chown -R www-data:www-data /snappymail/data/
 
 # Fix permissions
-chown -R $UID:$GID /snappymail/data /var/log /var/lib/nginx
-chmod o+w /dev/stdout
-chmod o+w /dev/stderr
+# chown -R $UID:$GID /snappymail/data /var/log /var/lib/nginx
+# chmod o+w /dev/stdout
+# chmod o+w /dev/stderr
 
 
 # Touch supervisord PID file in order to fix permissions
-touch /run/supervisord.pid
-chown php-cli:php-cli /run/supervisord.pid
+# touch /run/supervisord.pid
+# chown php-cli:php-cli /run/supervisord.pid
 
 # RUN !
-exec sudo -u php-cli -g php-cli /usr/bin/supervisord -c '/supervisor.conf' --pidfile '/run/supervisord.pid'
+# docker-php-ext-enable intl
+# docker-php-ext-enable pdo_pgsql
+# exec su php-cli -c '/usr/bin/supervisord -c /supervisor.conf --pidfile /run/supervisord.pid'
+exec /usr/bin/supervisord -c /supervisor.conf --pidfile /run/supervisord.pid
