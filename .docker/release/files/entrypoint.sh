@@ -6,10 +6,6 @@ LOG_TO_STDERR=${LOG_TO_STDERR:-true}
 MEMORY_LIMIT=${MEMORY_LIMIT:-128M}
 SECURE_COOKIES=${SECURE_COOKIES:-true}
 
-# Create not root php-cli
-# groupadd --gid "$GID" php-cli -f
-# addphp-cli --uid "$UID" --disabled-password --gid "$GID" --shell /bin/bash --home /home/php-cli php-cli --force --gecos ""
-
 # Set attachment size limit
 sed -i "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /usr/local/etc/php-fpm.d/php-fpm.conf /etc/nginx/nginx.conf
 sed -i "s/<MEMORY_LIMIT>/$MEMORY_LIMIT/g" /usr/local/etc/php-fpm.d/php-fpm.conf
@@ -70,7 +66,4 @@ chown -R www-data:www-data /snappymail/data/
 # chown php-cli:php-cli /run/supervisord.pid
 
 # RUN !
-# docker-php-ext-enable intl
-# docker-php-ext-enable pdo_pgsql
-# exec su php-cli -c '/usr/bin/supervisord -c /supervisor.conf --pidfile /run/supervisord.pid'
 exec /usr/bin/supervisord -c /supervisor.conf --pidfile /run/supervisord.pid
