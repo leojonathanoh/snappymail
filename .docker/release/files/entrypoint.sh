@@ -1,10 +1,10 @@
 #!/bin/sh
 set -eux
 
-UPLOAD_MAX_SIZE=25M
-LOG_TO_STDERR=true
-MEMORY_LIMIT=128M
-SECURE_COOKIES=true
+UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-25M}
+LOG_TO_STDERR=${LOG_TO_STDERR:-true}
+MEMORY_LIMIT=${MEMORY_LIMIT:-128M}
+SECURE_COOKIES=${SECURE_COOKIES:-true}
 
 # Create not root php-cli
 # groupadd --gid "$GID" php-cli -f
