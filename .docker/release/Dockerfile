@@ -1,17 +1,18 @@
 FROM alpine:3.15 AS builder
 RUN apk add --no-cache npm
 RUN npm install -g gulp yarn
-RUN apk add --no-cache php7 php7-json php-phar php-zip zip unzip
+RUN apk add --no-cache php7 php7-json php-phar php-zip
 COPY . /source
 WORKDIR /source
 RUN yarn install
 # Patch release.php with hotfix from: https://github.com/xgbstar1/snappymail-docker/blob/main/Dockerfile, so that release.php doesn't fail with error
 RUN sed -i 's_^if.*rename.*snappymail.v.0.0.0.*$_if (!!system("mv snappymail/v/0.0.0 snappymail/v/{$package->version}")) {_' cli/release.php  || true
 RUN php release.php
-RUN ls build/dist/releases/webmail/ > /version
-RUN find build/dist
-RUN export VERSION=$(cat /version) && echo $VERSION && mv -v build/dist/releases/webmail/$VERSION/snappymail-$VERSION.zip /snappymail.zip && ls -al /snappymail.zip;
-RUN unzip /snappymail.zip -d /snappymail; \
+RUN set -eux; \
+    VERSION=$( ls build/dist/releases/webmail ); \
+    ls -al build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz; \
+    mkdir -p /snappymail; \
+    tar -zxvf build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz -C /snappymail; \
     # The 'www-data' user/group in alpine is 82:82. The 'nginx' user in alpine is 101:101, and is part of www-data group
     chown -R 82:82 /snappymail; \
     find /snappymail -type d -exec chmod 750 {} \; ; \
