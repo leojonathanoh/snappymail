@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eux
+set -eu
 
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-25M}
 LOG_TO_STDERR=${LOG_TO_STDERR:-true}
