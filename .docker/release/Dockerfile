@@ -1,51 +1,78 @@
+FROM node AS base
+RUN npm install -g gulp
+RUN apt-get update && apt-get install -y php7.4 zip unzip php7.4-zip
+
+FROM base AS builder
+COPY . /source
+WORKDIR /source
+RUN yarn install
+# Patch release.php with hotfix from: https://github.com/xgbstar1/snappymail-docker/blob/main/Dockerfile, so that release.php doesn't fail with error
+RUN sed -i 's_^if.*rename.*snappymail.v.0.0.0.*$_if (!!system("mv snappymail/v/0.0.0 snappymail/v/{$package->version}")) {_' cli/release.php  || true
+RUN php release.php
+RUN ls build/dist/releases/webmail/ > /version
+RUN find build/dist
+RUN export VERSION=$(cat /version) && echo $VERSION && mv -v build/dist/releases/webmail/$VERSION/snappymail-$VERSION.zip /snappymail.zip && ls -al /snappymail.zip;
+RUN unzip /snappymail.zip -d /snappymail; \
+    # The 'www-data' user/group in alpine is 82:82. The 'nginx' user in alpine is 100:101, and is part of www-data group
+    chown -R 82:82 /snappymail; \
+    find /snappymail -type d -exec chmod 750 {} \; ; \
+    find /snappymail -type f -exec chmod 640 {} \; ;
+
+
 # Inspired by the original Rainloop dockerfile from youtous on GitLab
-FROM php:8.1-fpm-bullseye
+FROM php:7.4-fpm-alpine
 
-ARG FILES_ZIP
-
-
-
-LABEL org.label-schema.description="SnappyMail webmail client image using nginx, php-fpm based on Debian Buster"
-
-ENV UID=991 GID=991 UPLOAD_MAX_SIZE=25M LOG_TO_STDERR=true MEMORY_LIMIT=128M SECURE_COOKIES=true
-ENV fpm.pool.clear_env=false
+LABEL org.label-schema.description="SnappyMail webmail client image using nginx, php-fpm on Alpine"
 
 # Install dependencies such as nginx
-RUN mkdir -p /usr/share/man/man1/ /usr/share/man/man3/ /usr/share/man/man7/ && \
-    apt-get update -q --fix-missing && \
-    apt-get -y upgrade && \
-    apt-get install --no-install-recommends -y \
-        apt-transport-https gnupg openssl wget curl ca-certificates nginx supervisor sudo \
-        unzip libzip-dev libxml2-dev libldb-dev libldap2-dev \
-        sqlite3 libsqlite3-dev libsqlite3-0 libpq-dev postgresql-client mariadb-client logrotate \
-        zip mlocate libpcre3-dev libicu-dev \
-        build-essential chrpath libssl-dev \
-        libxft-dev libfreetype6 libfreetype6-dev \
-        libpng-dev libjpeg62-turbo-dev \
-        libfontconfig1 libfontconfig1-dev \
-        && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache ca-certificates nginx supervisor bash
 
 # Install PHP extensions
-RUN php -m && \
-    docker-php-ext-configure ldap --with-libdir=lib/$(uname -m)-linux-gnu/ && \
-    docker-php-ext-configure intl && \
+# gd
+RUN apk add --no-cache freetype libpng libjpeg-turbo && \
+    apk add --no-cache --virtual .deps freetype-dev libpng-dev libjpeg-turbo-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install ldap opcache pdo_mysql pdo_pgsql zip intl gd && \
-    php -m
+    docker-php-ext-install gd && \
+    apk del .deps
+# intl
+RUN apk add --no-cache icu-libs && \
+    apk add --no-cache --virtual .deps icu-dev && \
+    docker-php-ext-configure intl && \
+    docker-php-ext-install intl && \
+    apk del .deps
+# ldap
+RUN apk add --no-cache libldap && \
+    apk add --no-cache --virtual .deps ldb-dev openldap-dev && \
+    docker-php-ext-configure ldap && \
+    docker-php-ext-install ldap && \
+    apk del .deps
+# mysql
+RUN apk add --no-cache --virtual .deps libzip-dev && \
+    docker-php-ext-install pdo_mysql && \
+    apk del .deps
+# opcache
+RUN docker-php-ext-install opcache
+# postgres
+RUN apk add --no-cache libpq postgresql-dev && \
+    apk add --no-cache --virtual .deps postgresql-dev && \
+    docker-php-ext-install pdo_pgsql && \
+    apk del .deps
+# zip
+RUN apk add --no-cache libzip && \
+    apk add --no-cache --virtual .deps libzip-dev && \
+    docker-php-ext-install zip && \
+    apk del .deps
 
 # Install snappymail
-WORKDIR /tmp
-COPY ${FILES_ZIP} .
-RUN mkdir /snappymail && \
-    unzip -q ${FILES_ZIP} -d /snappymail && \
-    find /snappymail -type d -exec chmod 755 {} \; && \
-    find /snappymail -type f -exec chmod 644 {} \; && \
-    rm -rf ${FILES_ZIP}
-
+COPY --from=builder /snappymail /snappymail
 # Install other content
-COPY files /
-RUN chmod +x /entrypoint.sh && chmod +x /logrotate-loop.sh
+COPY .docker/release/files /
+RUN chmod +x /entrypoint.sh && chmod +x /logrotate-loop.sh && chown -R 82:82 /snappymail/data
+
+# Create 'php-cli' user (unused)
+RUN adduser -u 991 --disabled-password --shell /bin/bash --home /home/php-cli php-cli --gecos ""
+
+WORKDIR /
 VOLUME /snappymail/data
 EXPOSE 8888
 CMD ["/entrypoint.sh"]
