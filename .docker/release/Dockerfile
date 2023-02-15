@@ -20,7 +20,7 @@ RUN set -eux; \
 
 
 # Inspired by the original Rainloop dockerfile from youtous on GitLab
-FROM php:7.4-fpm-alpine
+FROM php:8.1-fpm-alpine AS final
 
 LABEL org.label-schema.description="SnappyMail webmail client image using nginx, php-fpm on Alpine"
 
