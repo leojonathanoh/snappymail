@@ -55,7 +55,7 @@ RUN set -eux; \
 # ldap
 RUN set -eux; \
     apk add --no-cache libldap; \
-    apk add --no-cache --virtual .deps ldb-dev openldap-dev; \
+    apk add --no-cache --virtual .deps openldap-dev; \
     docker-php-ext-configure ldap; \
     docker-php-ext-install ldap; \
     apk del .deps
