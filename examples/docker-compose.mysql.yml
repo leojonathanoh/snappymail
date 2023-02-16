@@ -5,23 +5,23 @@ services:
     ports:
       - 8888:8888
     volumes:
-      - snappymail-data:/snappymail/data
+      - asnappymail:/snappymail/data
     networks:
       - default
-      - mysql-network
+      - db-network
       - redis-network
 
   mysql:
     image: mariadb:10
     environment:
-      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=snappymail
       - MYSQL_PASSWORD=snappymail
       - MYSQL_DATABASE=snappymail
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql:/var/lib/mysql
     networks:
-      - mysql-network
+      - db-network
 
   redis:
     image: redis:7-alpine
@@ -30,11 +30,13 @@ services:
 
 networks:
   default:
-  mysql-network:
+  db-network:
     internal: true
   redis-network:
     internal: true
 
 volumes:
-  mysql-data:
-  snappymail-data:
+  mysql:
+    driver: local
+  asnappymail:
+    driver: local
