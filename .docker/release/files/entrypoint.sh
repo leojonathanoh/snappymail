@@ -37,12 +37,18 @@ fi
 
 # Enable output of snappymail logs
 if [ "${LOG_TO_STDERR}" = 'true' ]; then
-  sed 's/\; Enable logging\nenable = Off/\; Enable logging\nenable = On/' -i $SNAPPYMAIL_CONFIG_FILE
+  sed '/^\; Enable logging/{
+N
+s/enable = Off/enable = On/
+}' -i $SNAPPYMAIL_CONFIG_FILE
   sed 's/^filename = .*/filename = "errors.log"/' -i $SNAPPYMAIL_CONFIG_FILE
   sed 's/^write_on_error_only = .*/write_on_error_only = Off/' -i $SNAPPYMAIL_CONFIG_FILE
   sed 's/^write_on_php_error_only = .*/write_on_php_error_only = On/' -i $SNAPPYMAIL_CONFIG_FILE
 else
-    sed 's/\; Enable logging\nenable = On/\; Enable logging\nenable = Off/' -i $SNAPPYMAIL_CONFIG_FILE
+  sed '/^\; Enable logging$/{
+N
+s/enable = On/enable = Off/
+}' -i $SNAPPYMAIL_CONFIG_FILE
 fi
 # Always enable snappymail Auth logging
 sed 's/^auth_logging = .*/auth_logging = On/' -i $SNAPPYMAIL_CONFIG_FILE
