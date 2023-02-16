@@ -30,8 +30,8 @@ RUN apk add --no-cache ca-certificates nginx supervisor bash
 # Install PHP extensions
 # gd
 RUN set -eux; \
-    apk add --no-cache freetype libpng libjpeg-turbo; \
-    apk add --no-cache --virtual .deps freetype-dev libpng-dev libjpeg-turbo-dev; \
+    apk add --no-cache freetype libjpeg-turbo libpng; \
+    apk add --no-cache --virtual .deps freetype-dev libjpeg-turbo-dev libpng-dev; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install gd; \
     apk del .deps
