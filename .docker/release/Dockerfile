@@ -69,7 +69,7 @@ COPY --from=builder /snappymail /snappymail
 COPY .docker/release/files /
 RUN chmod +x /entrypoint.sh && chmod +x /logrotate-loop.sh && chown -R 82:82 /snappymail/data
 
-WORKDIR /
+WORKDIR /snappymail
 VOLUME /snappymail/data
 EXPOSE 8888
 CMD ["/entrypoint.sh"]
