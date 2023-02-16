@@ -66,6 +66,17 @@ RUN apk add --no-cache libpq postgresql-dev && \
     apk add --no-cache --virtual .deps postgresql-dev && \
     docker-php-ext-install pdo_pgsql && \
     apk del .deps
+# redis
+RUN apk add --no-cache liblzf zstd && \
+    apk add --no-cache --virtual .deps liblzf-dev zstd-libs && \
+    apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS && \
+    pecl install igbinary && \
+    docker-php-ext-enable igbinary && \
+    pecl install --configureoptions 'enable-redis-igbinary="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis && \
+    docker-php-ext-enable redis && \
+    docker-php-source delete && \
+    apk del .build-dependencies && \
+    apk del .deps
 # zip
 RUN apk add --no-cache libzip && \
     apk add --no-cache --virtual .deps libzip-dev && \
