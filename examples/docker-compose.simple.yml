@@ -1,0 +1,16 @@
+version: '3'
+services:
+  snappymail:
+    image: leojonathanoh/snappymail:merge
+    ports:
+      - 8888:8888
+    volumes:
+      - snappymail-data:/snappymail/data
+    networks:
+      - default
+
+networks:
+  default:
+
+volumes:
+  snappymail-data:
