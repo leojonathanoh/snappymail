@@ -74,8 +74,8 @@ RUN set -eux; \
     apk del .deps
 # redis
 RUN set -eux; \
-    apk add --no-cache liblzf zstd; \
-    apk add --no-cache --virtual .deps liblzf-dev zstd-libs; \
+    apk add --no-cache liblzf zstd-libs; \
+    apk add --no-cache --virtual .deps zstd-dev; \
     apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS; \
     pecl install igbinary; \
     docker-php-ext-enable igbinary; \
