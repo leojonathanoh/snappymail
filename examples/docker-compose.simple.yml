@@ -5,7 +5,7 @@ services:
     ports:
       - 8888:8888
     volumes:
-      - snappymail-data:/snappymail/data
+      - snappymail:/snappymail/data
     networks:
       - default
 
@@ -13,4 +13,5 @@ networks:
   default:
 
 volumes:
-  snappymail-data:
+  snappymail:
+    driver: local
