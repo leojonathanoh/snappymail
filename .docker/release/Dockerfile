@@ -69,9 +69,6 @@ COPY --from=builder /snappymail /snappymail
 COPY .docker/release/files /
 RUN chmod +x /entrypoint.sh && chmod +x /logrotate-loop.sh && chown -R 82:82 /snappymail/data
 
-# Create 'php-cli' user (unused)
-RUN adduser -u 991 --disabled-password --shell /bin/bash --home /home/php-cli php-cli --gecos ""
-
 WORKDIR /
 VOLUME /snappymail/data
 EXPOSE 8888
