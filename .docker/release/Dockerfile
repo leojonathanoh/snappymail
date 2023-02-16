@@ -29,58 +29,66 @@ RUN apk add --no-cache ca-certificates nginx supervisor bash
 
 # Install PHP extensions
 # gd
-RUN apk add --no-cache freetype libpng libjpeg-turbo && \
-    apk add --no-cache --virtual .deps freetype-dev libpng-dev libjpeg-turbo-dev && \
-    docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install gd && \
+RUN set -eux; \
+    apk add --no-cache freetype libpng libjpeg-turbo; \
+    apk add --no-cache --virtual .deps freetype-dev libpng-dev libjpeg-turbo-dev; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg; \
+    docker-php-ext-install gd; \
     apk del .deps
 # gnupg
-RUN apk add --no-cache gnupg gpgme && \
-    apk add --no-cache --virtual .deps gpgme-dev && \
-    apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS && \
-    pecl install gnupg && \
-    docker-php-ext-enable gnupg && \
-    docker-php-source delete && \
-    apk del .build-dependencies && \
+RUN set -eux; \
+    apk add --no-cache gnupg gpgme; \
+    apk add --no-cache --virtual .deps gpgme-dev; \
+    apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS; \
+    pecl install gnupg; \
+    docker-php-ext-enable gnupg; \
+    docker-php-source delete; \
+    apk del .build-dependencies; \
     apk del .deps
 # intl
-RUN apk add --no-cache icu-libs && \
-    apk add --no-cache --virtual .deps icu-dev && \
-    docker-php-ext-configure intl && \
-    docker-php-ext-install intl && \
+RUN set -eux; \
+    apk add --no-cache icu-libs; \
+    apk add --no-cache --virtual .deps icu-dev; \
+    docker-php-ext-configure intl; \
+    docker-php-ext-install intl; \
     apk del .deps
 # ldap
-RUN apk add --no-cache libldap && \
-    apk add --no-cache --virtual .deps ldb-dev openldap-dev && \
-    docker-php-ext-configure ldap && \
-    docker-php-ext-install ldap && \
+RUN set -eux; \
+    apk add --no-cache libldap; \
+    apk add --no-cache --virtual .deps ldb-dev openldap-dev; \
+    docker-php-ext-configure ldap; \
+    docker-php-ext-install ldap; \
     apk del .deps
 # mysql
-RUN apk add --no-cache --virtual .deps libzip-dev && \
-    docker-php-ext-install pdo_mysql && \
+RUN set -eux; \
+    apk add --no-cache --virtual .deps libzip-dev; \
+    docker-php-ext-install pdo_mysql; \
     apk del .deps
 # opcache
 RUN docker-php-ext-install opcache
 # postgres
-RUN apk add --no-cache libpq postgresql-dev && \
-    apk add --no-cache --virtual .deps postgresql-dev && \
-    docker-php-ext-install pdo_pgsql && \
+RUN set -eux; \
+    apk add --no-cache libpq postgresql-dev; \
+    apk add --no-cache --virtual .deps postgresql-dev; \
+    docker-php-ext-install pdo_pgsql; \
     apk del .deps
 # redis
-RUN apk add --no-cache liblzf zstd && \
-    apk add --no-cache --virtual .deps liblzf-dev zstd-libs && \
-    apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS && \
-    pecl install igbinary && \
-    docker-php-ext-enable igbinary && \
-    pecl install --configureoptions 'enable-redis-igbinary="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis && \
-    docker-php-ext-enable redis && \
-    docker-php-source delete && \
-    apk del .build-dependencies && \
+RUN set -eux; \
+    apk add --no-cache liblzf zstd; \
+    apk add --no-cache --virtual .deps liblzf-dev zstd-libs; \
+    apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS; \
+    pecl install igbinary; \
+    docker-php-ext-enable igbinary; \
+    pecl install --configureoptions 'enable-redis-igbinary="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis; \
+    docker-php-ext-enable redis; \
+    docker-php-source delete; \
+    apk del .build-dependencies; \
     apk del .deps
 # zip
-RUN apk add --no-cache libzip && \
-    apk add --no-cache --virtual .deps libzip-dev && \
-    docker-php-ext-install zip && \
+RUN set -eux; \
+    apk add --no-cache libzip; \
+    apk add --no-cache --virtual .deps libzip-dev; \
+    docker-php-ext-install zip; \
     apk del .deps
 
 # Install snappymail
