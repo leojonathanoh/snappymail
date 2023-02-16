@@ -4,7 +4,7 @@ Here are some [`docker-compose`] examples.
 
 ## `docker-compose.simple.yml`
 
-This is the most basic setup of `snappymail`, using [SQLite](https://www.sqlite.org/index.html) as the database.
+This runs `snappymail`, using [SQLite](https://www.sqlite.org/index.html) as the database.
 
 Start the stack:
 
@@ -84,3 +84,33 @@ To setup Redis for caching, in `Admin panel`, click `Config`, under `labs`, upda
 - `labs > fast_cache_redis_port`: `6379`
 
 Redis caching is now enabled.
+
+## `docker-compose.traefik.yml`
+
+This runs `snappymail`, using [SQLite](https://www.sqlite.org/index.html) as the database, with `traefik` as the TLS reverse proxy and loadbalancer.
+
+In this example, it is assumed the domain name is `snappymail.example.com`. It is assumed you have an [OVHcloud](https://www.ovh.com/auth/) account to obtain LetsEncrypt TLS certs via `ACME` using DNS challenge for the domain `snappymail.example.com`. If you are using other DNS providers, see [here](https://doc.traefik.io/traefik/https/acme/#providers).
+
+To begin, edit the `OVH_*` environment variables in [`docker-compose.traefik.yml`](docker-compose.traefik.yml) accordingly:
+
+```sh
+nano docker-compose.traefik.yml
+```
+
+Start `snappymail` and `traefik`:
+
+```sh
+docker-compose -f docker-compose.traefik.yml up
+```
+
+`traefik` should now begin requesting a TLS cert for `snappymail.example.com`. The process may take a few minutes. If all goes well, https://snappymail.example.com should now be ready.
+
+> You may still visit https://snappymail.example.com while waiting for `traefik` to be issued a TLS certificate. `traefik` simply serves a self-signed TLS cert.∑
+
+Get the Admin Panel password:
+
+```sh
+docker exec -it $( docker-compose -f docker-compose.traefik.yml ps -q snappymail ) cat /snappymail/data/_data_/_default_/admin_password.txt
+```
+
+Now, login to [https://snappymail.example.com/?admin](https://snappymail.example.com/?admin) with user `admin` and the admin password.
