@@ -60,10 +60,7 @@ RUN set -eux; \
     docker-php-ext-install ldap; \
     apk del .deps
 # mysql
-RUN set -eux; \
-    apk add --no-cache --virtual .deps libzip-dev; \
-    docker-php-ext-install pdo_mysql; \
-    apk del .deps
+RUN docker-php-ext-install pdo_mysql
 # opcache
 RUN docker-php-ext-install opcache
 # postgres
