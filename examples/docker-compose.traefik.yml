@@ -43,15 +43,15 @@ services:
       - "traefik.docker.network=traefik-network"
       # traefik v2
       # http
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME?err}-snappymail-http.entrypoints=web"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME?err}-snappymail-http.rule=Host(`snappymail.example.com`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME?err}-snappymail-http.middlewares=${COMPOSE_PROJECT_NAME?err}-snappymail-http-myRedirectScheme" # Redirect http to https
-      - "traefik.http.middlewares.${COMPOSE_PROJECT_NAME?err}-snappymail-http-myRedirectScheme.redirectScheme.scheme=https" # Redirect http to https
+      - "traefik.http.routers.snappymail-http.entrypoints=web"
+      - "traefik.http.routers.snappymail-http.rule=Host(`snappymail.example.com`)"
+      - "traefik.http.routers.snappymail-http.middlewares=snappymail-http-myRedirectScheme" # Redirect http to https
+      - "traefik.http.middlewares.snappymail-http-myRedirectScheme.redirectScheme.scheme=https" # Redirect http to https
       # https
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME?err}-snappymail.entrypoints=websecure"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME?err}-snappymail.tls"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME?err}-snappymail.rule=Host(`snappymail.example.com`)"
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME?err}-snappymail.loadbalancer.server.port=8888"
+      - "traefik.http.routers.snappymail.entrypoints=websecure"
+      - "traefik.http.routers.snappymail.tls"
+      - "traefik.http.routers.snappymail.rule=Host(`snappymail.example.com`)"
+      - "traefik.http.services.snappymail.loadbalancer.server.port=8888"
     expose:
       - 8888
     volumes:
