@@ -5,7 +5,7 @@ services:
   # You will need a domain name. E.g. 'example.com'
   # This example requests TLS certs via ACME via DNS challenge
   traefik:
-    image: traefik:v2.7
+    image: traefik:v2
     environment:
       - OVH_ENDPOINT=xxx
       - OVH_APPLICATION_KEY=xxx
