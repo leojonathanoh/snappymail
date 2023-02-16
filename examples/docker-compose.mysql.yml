@@ -10,6 +10,7 @@ services:
       - default
       - db-network
       - redis-network
+    restart: unless-stopped
 
   mysql:
     image: mariadb:10
@@ -22,11 +23,13 @@ services:
       - mysql:/var/lib/mysql
     networks:
       - db-network
+    restart: unless-stopped
 
   redis:
     image: redis:7-alpine
     networks:
       - redis-network
+    restart: unless-stopped
 
 networks:
   default:
