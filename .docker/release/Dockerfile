@@ -68,7 +68,7 @@ RUN set -eux; \
 RUN docker-php-ext-install opcache
 # postgres
 RUN set -eux; \
-    apk add --no-cache libpq postgresql-dev; \
+    apk add --no-cache postgresql-libs; \
     apk add --no-cache --virtual .deps postgresql-dev; \
     docker-php-ext-install pdo_pgsql; \
     apk del .deps
