@@ -34,6 +34,15 @@ RUN apk add --no-cache freetype libpng libjpeg-turbo && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd && \
     apk del .deps
+# gnupg
+RUN apk add --no-cache gnupg gpgme && \
+    apk add --no-cache --virtual .deps gpgme-dev && \
+    apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS && \
+    pecl install gnupg && \
+    docker-php-ext-enable gnupg && \
+    docker-php-source delete && \
+    apk del .build-dependencies && \
+    apk del .deps
 # intl
 RUN apk add --no-cache icu-libs && \
     apk add --no-cache --virtual .deps icu-dev && \
