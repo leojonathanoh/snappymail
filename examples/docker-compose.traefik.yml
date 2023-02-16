@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
   # The reverse proxy for our web containers
   # See https://github.com/traefik/traefik/tree/v2.7/docs/content/user-guides/docker-compose for some examples for enabling HTTPS using ACME
