@@ -38,7 +38,7 @@ docker exec -it $( docker-compose -f docker-compose.mysql.yml ps -q snappymail )
 
 Now, login to [https://localhost:8888/?admin](https://localhost:8888/?admin) with user `admin` and the admin password.
 
-To setup MySQL as the DB, in `Admin panel`, click `Contacts`, check `Enable contacts` and , and under `Storage (PDO)` choose the following:
+To setup MySQL as the DB, in Admin Panel, click `Contacts`, check `Enable contacts` and , and under `Storage (PDO)` choose the following:
 
 - Type: `MySQL`
 - Data Source Name (DSN): `host=mysql;port=3306;dbname=snappymail`
@@ -67,7 +67,7 @@ docker exec -it $( docker-compose -f docker-compose.postgres.yml ps -q snappymai
 
 Now, login to [https://localhost:8888/?admin](https://localhost:8888/?admin) with user `admin` and the admin password.
 
-To use PostgreSQL as the DB, in `Admin panel`, click `Contacts`, check `Enable contacts` and , and under `Storage (PDO)` choose the following:
+To use PostgreSQL as the DB, in Admin Panel, click `Contacts`, check `Enable contacts` and , and under `Storage (PDO)` choose the following:
 
 - Type: `PostgresSQL`
 - Data Source Name (DSN): `host=postgres;port=5432;dbname=snappymail`
@@ -76,7 +76,7 @@ To use PostgreSQL as the DB, in `Admin panel`, click `Contacts`, check `Enable c
 
 Click the `Test` button. If it turns green, PostgreSQL is ready to be used for contacts.
 
-To setup Redis for caching, in `Admin panel`, click `Config`, under `labs`, update the following configuration options:
+To setup Redis for caching, in Admin Panel, click `Config`, under `labs`, update the following configuration options:
 
 - `cache > enable`: yes
 - `cache > fast_cache_driver`: `redis`
@@ -89,7 +89,7 @@ Redis caching is now enabled.
 
 This runs `snappymail`, using [SQLite](https://www.sqlite.org/index.html) as the database, with `traefik` as the TLS reverse proxy and loadbalancer.
 
-In this example, it is assumed the domain name is `snappymail.example.com`. It is assumed you have an [OVHcloud](https://www.ovh.com/auth/) account to obtain LetsEncrypt TLS certs via `ACME` using DNS challenge for the domain `snappymail.example.com`. If you are using other DNS providers, see [here](https://doc.traefik.io/traefik/https/acme/#providers).
+In this example, it is assumed the domain name is `snappymail.example.com`. It is assumed you have an [OVHcloud](https://www.ovh.com/auth/) account to obtain LetsEncrypt TLS certs via `ACME` using DNS challenge for the domain `snappymail.example.com`. If you are using another DNS provider, see [here](https://doc.traefik.io/traefik/https/acme/#providers).
 
 To begin, edit the `OVH_*` environment variables in [`docker-compose.traefik.yml`](docker-compose.traefik.yml) accordingly:
 
@@ -105,7 +105,7 @@ docker-compose -f docker-compose.traefik.yml up
 
 `traefik` should now begin requesting a TLS cert for `snappymail.example.com`. The process may take a few minutes. If all goes well, https://snappymail.example.com should now be ready.
 
-> You may still visit https://snappymail.example.com while waiting for `traefik` to be issued a TLS certificate. `traefik` simply serves a self-signed TLS cert.∑
+> You may still visit https://snappymail.example.com while waiting for `traefik` to be issued a TLS certificate. `traefik` simply serves a self-signed TLS cert.
 
 Get the Admin Panel password:
 
