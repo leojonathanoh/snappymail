@@ -13,8 +13,6 @@ RUN set -eux; \
     ls -al build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz; \
     mkdir -p /snappymail; \
     tar -zxvf build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz -C /snappymail; \
-    # The 'www-data' user/group in alpine is 82:82. The 'nginx' user in alpine is 101:101, and is part of www-data group
-    chown -R 82:82 /snappymail; \
     find /snappymail -type d -exec chmod 750 {} \; ; \
     find /snappymail -type f -exec chmod 640 {} \; ;
 
@@ -89,10 +87,11 @@ RUN set -eux; \
     apk del .deps
 
 # Install snappymail
-COPY --from=builder /snappymail /snappymail
+# The 'www-data' user/group in alpine is 82:82. The 'nginx' user/group in alpine is 101:101, and is part of www-data group
+COPY --chown=www-data:www-data --from=builder /snappymail /snappymail
 # Install other content
 COPY .docker/release/files /
-RUN chmod +x /entrypoint.sh && chmod +x /logrotate-loop.sh && chown -R 82:82 /snappymail/data
+RUN chmod +x /entrypoint.sh && chmod +x /logrotate-loop.sh
 
 WORKDIR /snappymail
 VOLUME /snappymail/data
