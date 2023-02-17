@@ -13,9 +13,9 @@ RUN set -eux; \
     ls -al build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz; \
     mkdir -p /snappymail; \
     tar -zxvf build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz -C /snappymail; \
-    find /snappymail -type d -exec chmod 750 {} \; ; \
-    find /snappymail -type f -exec chmod 640 {} \; ;
-
+    find /snappymail -type d -exec chmod 550 {} \; ; \
+    find /snappymail -type f -exec chmod 440 {} \; ; \
+    find /snappymail/data -type d -exec chmod 750 {} \; ;
 
 # Inspired by the original Rainloop dockerfile from youtous on GitLab
 FROM php:8.1-fpm-alpine AS final
