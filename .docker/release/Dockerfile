@@ -15,7 +15,10 @@ RUN set -eux; \
     tar -zxvf build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz -C /snappymail; \
     find /snappymail -type d -exec chmod 550 {} \; ; \
     find /snappymail -type f -exec chmod 440 {} \; ; \
-    find /snappymail/data -type d -exec chmod 750 {} \; ;
+    find /snappymail/data -type d -exec chmod 750 {} \; ; \
+    # Remove unneeded files
+    rm -v /snappymail/README.md; \
+    rm -v /snappymail/_include.php;
 
 # Inspired by the original Rainloop dockerfile from youtous on GitLab
 FROM php:8.1-fpm-alpine AS final
