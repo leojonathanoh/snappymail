@@ -11,7 +11,7 @@ sed -i "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /usr/local/etc/php-fpm.d/php-fpm
 sed -i "s/<MEMORY_LIMIT>/$MEMORY_LIMIT/g" /usr/local/etc/php-fpm.d/php-fpm.conf
 
 # Set log output to STDERR if wanted (LOG_TO_STDERR=true)
-if [ "$LOG_TO_STDERR" = true ]; then
+if [ "$LOG_TO_STDERR" = 'true' ]; then
   echo "[INFO] Logging to stderr activated"
   sed -i "s/.*error_log.*$/error_log \/dev\/stderr warn;/" /etc/nginx/nginx.conf
   sed -i "s/.*error_log.*$/php_admin_value[error_log] = \/dev\/stderr/" /usr/local/etc/php-fpm.d/php-fpm.conf
