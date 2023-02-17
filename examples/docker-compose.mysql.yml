@@ -5,7 +5,7 @@ services:
     ports:
       - 8888:8888
     volumes:
-      - asnappymail:/snappymail/data
+      - snappymail:/snappymail/data
     networks:
       - default
       - db-network
@@ -41,5 +41,5 @@ networks:
 volumes:
   mysql:
     driver: local
-  asnappymail:
+  snappymail:
     driver: local
