@@ -91,7 +91,13 @@ RUN set -eux; \
 COPY --chown=www-data:www-data --from=builder /snappymail /snappymail
 # Install other content
 COPY --chown=root:root .docker/release/files /
-RUN chmod +x /entrypoint.sh && chmod +x /logrotate-loop.sh
+RUN set -eux; \
+    chmod +x /entrypoint.sh; \
+    chmod +x /logrotate-loop.sh; \
+    # Disable the built-in php-fpm configs, since we're using our own config
+    mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled; \
+    mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled; \
+    mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled
 
 WORKDIR /snappymail
 VOLUME /snappymail/data
