@@ -47,6 +47,13 @@ To setup MySQL as the DB, in Admin Panel, click `Contacts`, check `Enable contac
 
 Click the `Test` button. If it turns green, MySQL is ready to be used for contacts.
 
+To setup Redis for caching, in Admin Panel, click `Config`, update the following configuration options:
+
+- `cache > enable`: yes
+- `cache > fast_cache_driver`: `redis`
+- `labs > fast_cache_redis_host`: `redis`
+- `labs > fast_cache_redis_port`: `6379`
+
 Redis caching is now enabled.
 
 ## `docker-compose.postgres.yml`
@@ -76,7 +83,7 @@ To use PostgreSQL as the DB, in Admin Panel, click `Contacts`, check `Enable con
 
 Click the `Test` button. If it turns green, PostgreSQL is ready to be used for contacts.
 
-To setup Redis for caching, in Admin Panel, click `Config`, under `labs`, update the following configuration options:
+To setup Redis for caching, in Admin Panel, click `Config`, update the following configuration options:
 
 - `cache > enable`: yes
 - `cache > fast_cache_driver`: `redis`
