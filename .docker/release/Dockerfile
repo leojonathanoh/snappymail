@@ -26,7 +26,7 @@ FROM php:8.1-fpm-alpine AS final
 LABEL org.label-schema.description="SnappyMail webmail client image using nginx, php-fpm on Alpine"
 
 # Install dependencies such as nginx
-RUN apk add --no-cache ca-certificates nginx supervisor bash
+RUN apk add --no-cache ca-certificates nginx supervisor bash logrotate
 
 # Install PHP extensions
 # gd
@@ -99,15 +99,16 @@ RUN mv -v /snappymail/data /var/lib/snappymail; \
         echo "define('APP_DATA_FOLDER_PATH', '/var/lib/snappymail/');"; \
         echo "?>"; \
     ) > /snappymail/include.php;
-# Install other content
+# Setup configs
 COPY --chown=root:root .docker/release/files /
 RUN set -eux; \
     chmod +x /entrypoint.sh; \
-    chmod +x /logrotate-loop.sh; \
     # Disable the built-in php-fpm configs, since we're using our own config
     mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled; \
     mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled; \
-    mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled
+    mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled; \
+    # Setup crontab permissions for logrorate
+    chmod 600 /etc/crontabs/root
 
 WORKDIR /snappymail
 VOLUME /var/lib/snappymail
