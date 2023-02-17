@@ -89,6 +89,13 @@ RUN set -eux; \
 # Install snappymail
 # The 'www-data' user/group in alpine is 82:82. The 'nginx' user/group in alpine is 101:101, and is part of www-data group
 COPY --chown=www-data:www-data --from=builder /snappymail /snappymail
+# Use a custom snappymail data folder
+RUN mv -v /snappymail/data /var/lib/snappymail; \
+    ( \
+        echo "<?php"; \
+        echo "define('APP_DATA_FOLDER_PATH', '/var/lib/snappymail/');"; \
+        echo "?>"; \
+    ) > /snappymail/include.php;
 # Install other content
 COPY --chown=root:root .docker/release/files /
 RUN set -eux; \
@@ -100,6 +107,6 @@ RUN set -eux; \
     mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled
 
 WORKDIR /snappymail
-VOLUME /snappymail/data
+VOLUME /var/lib/snappymail
 EXPOSE 8888
 CMD ["/entrypoint.sh"]

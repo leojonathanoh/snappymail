@@ -56,7 +56,7 @@ services:
     expose:
       - 8888
     volumes:
-      - snappymail:/snappymail/data
+      - snappymail:/var/lib/snappymail
     networks:
       - default
       - traefik-network
