@@ -1,0 +1,2 @@
+# Run logrotate hourly
+0 * * * * logrotate --state /tmp/logrotate.state /etc/logrotate.d/snappymail
