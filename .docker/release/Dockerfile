@@ -90,7 +90,7 @@ RUN set -eux; \
 # The 'www-data' user/group in alpine is 82:82. The 'nginx' user/group in alpine is 101:101, and is part of www-data group
 COPY --chown=www-data:www-data --from=builder /snappymail /snappymail
 # Install other content
-COPY .docker/release/files /
+COPY --chown=root:root .docker/release/files /
 RUN chmod +x /entrypoint.sh && chmod +x /logrotate-loop.sh
 
 WORKDIR /snappymail
