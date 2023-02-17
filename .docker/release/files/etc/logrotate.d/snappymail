@@ -1,4 +1,4 @@
-/snappymail/data/_data_/_default_/logs/* {
+/var/lib/snappymail/_data_/_default_/logs/* {
     size 10M
     rotate 0
     missingok

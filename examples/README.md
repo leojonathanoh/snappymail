@@ -15,7 +15,7 @@ docker-compose -f docker-compose.simple.yml up
 Get the Admin Panel password:
 
 ```sh
-docker exec -it $( docker-compose -f docker-compose.simple.yml ps -q snappymail ) cat /snappymail/data/_data_/_default_/admin_password.txt
+docker exec -it $( docker-compose -f docker-compose.simple.yml ps -q snappymail ) cat /var/lib/snappymail/_data_/_default_/admin_password.txt
 ```
 
 Now, login to [https://localhost:8888/?admin](https://localhost:8888/?admin) with user `admin` and the admin password.
@@ -33,7 +33,7 @@ docker-compose -f docker-compose.mysql.yml up
 Get the Admin Panel password:
 
 ```sh
-docker exec -it $( docker-compose -f docker-compose.mysql.yml ps -q snappymail ) cat /snappymail/data/_data_/_default_/admin_password.txt
+docker exec -it $( docker-compose -f docker-compose.mysql.yml ps -q snappymail ) cat /var/lib/snappymail/_data_/_default_/admin_password.txt
 ```
 
 Now, login to [https://localhost:8888/?admin](https://localhost:8888/?admin) with user `admin` and the admin password.
@@ -69,7 +69,7 @@ docker-compose -f docker-compose.postgres.yml up
 Get the Admin Panel password:
 
 ```sh
-docker exec -it $( docker-compose -f docker-compose.postgres.yml ps -q snappymail ) cat /snappymail/data/_data_/_default_/admin_password.txt
+docker exec -it $( docker-compose -f docker-compose.postgres.yml ps -q snappymail ) cat /var/lib/snappymail/_data_/_default_/admin_password.txt
 ```
 
 Now, login to [https://localhost:8888/?admin](https://localhost:8888/?admin) with user `admin` and the admin password.
@@ -117,7 +117,7 @@ docker-compose -f docker-compose.traefik.yml up
 Get the Admin Panel password:
 
 ```sh
-docker exec -it $( docker-compose -f docker-compose.traefik.yml ps -q snappymail ) cat /snappymail/data/_data_/_default_/admin_password.txt
+docker exec -it $( docker-compose -f docker-compose.traefik.yml ps -q snappymail ) cat /var/lib/snappymail/_data_/_default_/admin_password.txt
 ```
 
 Now, login to [https://snappymail.example.com/?admin](https://snappymail.example.com/?admin) with user `admin` and the admin password.

@@ -5,7 +5,7 @@ services:
     ports:
       - 8888:8888
     volumes:
-      - snappymail:/snappymail/data
+      - snappymail:/var/lib/snappymail
     networks:
       - default
     restart: unless-stopped
