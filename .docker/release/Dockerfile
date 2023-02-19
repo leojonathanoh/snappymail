@@ -17,8 +17,7 @@ RUN set -eux; \
     find /snappymail -type f -exec chmod 440 {} \; ; \
     find /snappymail/data -type d -exec chmod 750 {} \; ; \
     # Remove unneeded files
-    rm -v /snappymail/README.md; \
-    rm -v /snappymail/_include.php;
+    rm -v /snappymail/README.md /snappymail/_include.php
 
 # Inspired by the original Rainloop dockerfile from youtous on GitLab
 FROM php:8.1-fpm-alpine AS final
