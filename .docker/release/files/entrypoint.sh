@@ -33,6 +33,7 @@ sed '/^\; Enable logging/{
 N
 s/enable = Off/enable = On/
 }' -i $SNAPPYMAIL_CONFIG_FILE
+# Redirect snappymail logs to stderr /stdout
 sed 's/^filename = .*/filename = "stderr"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^write_on_error_only = .*/write_on_error_only = Off/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^write_on_php_error_only = .*/write_on_php_error_only = On/' -i $SNAPPYMAIL_CONFIG_FILE
@@ -42,9 +43,6 @@ sed 's/^auth_logging = .*/auth_logging = On/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_filename = .*/auth_logging_filename = "auth.log"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_format = .*/auth_logging_format = "[{date:Y-m-d H:i:s}] Auth failed: ip={request:ip} user={imap:login} host={imap:host} port={imap:port}"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_syslog = .*/auth_syslog = Off/' -i $SNAPPYMAIL_CONFIG_FILE
-# Redirect snappymail logs to stderr /stdout
-mkdir -p /var/lib/snappymail/_data_/_default_/logs/
-ln -sf /dev/stderr /var/lib/snappymail/_data_/_default_/logs/errors.log
 chown -R www-data:www-data /var/lib/snappymail/
 
 # Fix permissions
