@@ -10,13 +10,6 @@ SECURE_COOKIES=${SECURE_COOKIES:-true}
 sed -i "s/<UPLOAD_MAX_SIZE>/$UPLOAD_MAX_SIZE/g" /usr/local/etc/php-fpm.d/php-fpm.conf /etc/nginx/nginx.conf
 sed -i "s/<MEMORY_LIMIT>/$MEMORY_LIMIT/g" /usr/local/etc/php-fpm.d/php-fpm.conf
 
-# Set log output to STDERR if wanted (LOG_TO_STDERR=true)
-if [ "$LOG_TO_STDERR" = 'true' ]; then
-  echo "[INFO] Logging to stderr activated"
-  sed -i "s/.*error_log.*$/error_log \/dev\/stderr warn;/" /etc/nginx/nginx.conf
-  sed -i "s/.*error_log.*$/php_admin_value[error_log] = \/dev\/stderr/" /usr/local/etc/php-fpm.d/php-fpm.conf
-fi
-
 # Secure cookies
 if [ "${SECURE_COOKIES}" = 'true' ]; then
     echo "[INFO] Secure cookies activated"
@@ -36,20 +29,14 @@ if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
 fi
 
 # Enable output of snappymail logs
-if [ "${LOG_TO_STDERR}" = 'true' ]; then
-  sed '/^\; Enable logging/{
+sed '/^\; Enable logging/{
 N
 s/enable = Off/enable = On/
 }' -i $SNAPPYMAIL_CONFIG_FILE
-  sed 's/^filename = .*/filename = "errors.log"/' -i $SNAPPYMAIL_CONFIG_FILE
-  sed 's/^write_on_error_only = .*/write_on_error_only = Off/' -i $SNAPPYMAIL_CONFIG_FILE
-  sed 's/^write_on_php_error_only = .*/write_on_php_error_only = On/' -i $SNAPPYMAIL_CONFIG_FILE
-else
-  sed '/^\; Enable logging$/{
-N
-s/enable = On/enable = Off/
-}' -i $SNAPPYMAIL_CONFIG_FILE
-fi
+sed 's/^filename = .*/filename = "stderr"/' -i $SNAPPYMAIL_CONFIG_FILE
+sed 's/^write_on_error_only = .*/write_on_error_only = Off/' -i $SNAPPYMAIL_CONFIG_FILE
+sed 's/^write_on_php_error_only = .*/write_on_php_error_only = On/' -i $SNAPPYMAIL_CONFIG_FILE
+
 # Always enable snappymail Auth logging
 sed 's/^auth_logging = .*/auth_logging = On/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_filename = .*/auth_logging_filename = "auth.log"/' -i $SNAPPYMAIL_CONFIG_FILE
