@@ -25,7 +25,7 @@ FROM php:8.1-fpm-alpine AS final
 LABEL org.label-schema.description="SnappyMail webmail client image using nginx, php-fpm on Alpine"
 
 # Install dependencies such as nginx
-RUN apk add --no-cache ca-certificates nginx supervisor bash logrotate
+RUN apk add --no-cache ca-certificates nginx supervisor bash
 
 # Install PHP extensions
 # gd
@@ -105,9 +105,7 @@ RUN set -eux; \
     # Disable the built-in php-fpm configs, since we're using our own config
     mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled; \
     mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled; \
-    mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled; \
-    # Setup crontab permissions for logrorate
-    chmod 600 /etc/crontabs/root
+    mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled;
 
 WORKDIR /snappymail
 VOLUME /var/lib/snappymail
