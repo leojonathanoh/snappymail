@@ -36,23 +36,13 @@ s/enable = Off/enable = On/
 sed 's/^filename = .*/filename = "stderr"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^write_on_error_only = .*/write_on_error_only = Off/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^write_on_php_error_only = .*/write_on_php_error_only = On/' -i $SNAPPYMAIL_CONFIG_FILE
-
 # Always enable snappymail Auth logging
 sed 's/^auth_logging = .*/auth_logging = On/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_filename = .*/auth_logging_filename = "auth.log"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_format = .*/auth_logging_format = "[{date:Y-m-d H:i:s}] Auth failed: ip={request:ip} user={imap:login} host={imap:host} port={imap:port}"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_syslog = .*/auth_syslog = Off/' -i $SNAPPYMAIL_CONFIG_FILE
+# Set permissions
 chown -R www-data:www-data /var/lib/snappymail/
-
-# Fix permissions
-# chown -R $UID:$GID /var/lib/snappymail /var/log /var/lib/nginx
-# chmod o+w /dev/stdout
-# chmod o+w /dev/stderr
-
-
-# Touch supervisord PID file in order to fix permissions
-# touch /run/supervisord.pid
-# chown php-cli:php-cli /run/supervisord.pid
 
 # RUN !
 exec /usr/bin/supervisord -c /supervisor.conf --pidfile /run/supervisord.pid
