@@ -57,9 +57,7 @@ sed 's/^auth_logging_format = .*/auth_logging_format = "[{date:Y-m-d H:i:s}] Aut
 sed 's/^auth_syslog = .*/auth_syslog = Off/' -i $SNAPPYMAIL_CONFIG_FILE
 # Redirect snappymail logs to stderr /stdout
 mkdir -p /var/lib/snappymail/_data_/_default_/logs/
-# empty logs
-cp /dev/null /var/lib/snappymail/_data_/_default_/logs/errors.log
-cp /dev/null /var/lib/snappymail/_data_/_default_/logs/auth.log
+ln -sf /dev/stderr /var/lib/snappymail/_data_/_default_/logs/errors.log
 chown -R www-data:www-data /var/lib/snappymail/
 
 # Fix permissions
