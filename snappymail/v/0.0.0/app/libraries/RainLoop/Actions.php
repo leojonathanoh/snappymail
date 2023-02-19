@@ -127,7 +127,9 @@ class Actions
 
 			$oDriver = null;
 			$sLogFileName = $this->oConfig->Get('logs', 'filename', '');
-			if ('syslog' === $sLogFileName) {
+			if ('stderr' === $sLogFileName) {
+				$oDriver = new \MailSo\Log\Drivers\File("/dev/stderr");
+			} else if ('syslog' === $sLogFileName) {
 				$oDriver = new \MailSo\Log\Drivers\Syslog();
 			} else {
 				$sLogFileFullPath = \trim($this->oConfig->Get('logs', 'path', '')) ?: \APP_PRIVATE_DATA . 'logs';

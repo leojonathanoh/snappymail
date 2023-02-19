@@ -50,6 +50,6 @@ class File extends \MailSo\Log\Driver
 		if (\is_array($mDesc)) {
 			$mDesc = \implode("\n\t", $mDesc);
 		}
-		return \error_log($mDesc . "\n", 3, $this->sLoggerFileName);
+		return preg_match("/^\/dev\/stderr/", $this->sLoggerFileName ) ? \error_log($mDesc . "\n", 0, $this->sLoggerFileName) : \error_log($mDesc . "\n", 3, $this->sLoggerFileName);
 	}
 }
