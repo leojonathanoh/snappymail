@@ -131,6 +131,8 @@ class Actions
 				$oDriver = new \MailSo\Log\Drivers\File("/dev/stderr");
 			} else if ('syslog' === $sLogFileName) {
 				$oDriver = new \MailSo\Log\Drivers\Syslog();
+			} else if ('stderr' === $sLogFileName) {
+				$oDriver = new \MailSo\Log\Drivers\StderrStream();
 			} else {
 				$sLogFileFullPath = \trim($this->oConfig->Get('logs', 'path', '')) ?: \APP_PRIVATE_DATA . 'logs';
 				\is_dir($sLogFileFullPath) || \mkdir($sLogFileFullPath, 0700, true);
