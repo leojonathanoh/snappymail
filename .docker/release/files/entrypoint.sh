@@ -19,12 +19,18 @@ if [ "${SECURE_COOKIES}" = 'true' ]; then
         } > /usr/local/etc/php/conf.d/cookies.ini;
 fi
 
-# Copy snappymail default config if absent
+# Set permissions on snappymail data
+echo "[INFO] Setting permissions on /var/lib/snappymail"
+chown -R www-data:www-data /var/lib/snappymail/
+chmod 550 /var/lib/snappymail/
+find /var/lib/snappymail/ -type d -exec chmod 750 {} \;
+
+# Create snappymail default config if absent
 SNAPPYMAIL_CONFIG_FILE=/var/lib/snappymail/_data_/_default_/configs/application.ini
 if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
     echo "[INFO] Creating default Snappymail configuration"
-    mkdir -p $(dirname $SNAPPYMAIL_CONFIG_FILE)
-    cp /usr/local/include/application.ini $SNAPPYMAIL_CONFIG_FILE
+    # Run snappymail and exit. This populates the snappymail data directory
+    su - www-data -s /bin/sh -c 'php /snappymail/index.php' > /dev/null
 fi
 
 # Enable output of snappymail logs
@@ -41,8 +47,6 @@ sed 's/^auth_logging = .*/auth_logging = On/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_filename = .*/auth_logging_filename = "auth.log"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_format = .*/auth_logging_format = "[{date:Y-m-d H:i:s}] Auth failed: ip={request:ip} user={imap:login} host={imap:host} port={imap:port}"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_syslog = .*/auth_syslog = Off/' -i $SNAPPYMAIL_CONFIG_FILE
-# Set permissions
-chown -R www-data:www-data /var/lib/snappymail/
 
 # RUN !
 exec /usr/bin/supervisord -c /supervisor.conf --pidfile /run/supervisord.pid
