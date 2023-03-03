@@ -125,9 +125,7 @@ class Actions
 
 			$oDriver = null;
 			$sLogFileName = $this->oConfig->Get('logs', 'filename', '');
-			if ('stderr' === $sLogFileName) {
-				$oDriver = new \MailSo\Log\Drivers\File("/dev/stderr");
-			} else if ('syslog' === $sLogFileName) {
+			if ('syslog' === $sLogFileName) {
 				$oDriver = new \MailSo\Log\Drivers\Syslog();
 			} else if ('stderr' === $sLogFileName) {
 				$oDriver = new \MailSo\Log\Drivers\StderrStream();
