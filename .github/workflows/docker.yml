@@ -73,6 +73,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and push
+      id: build-and-push
       uses: docker/build-push-action@v3
       with:
         context: '.'
@@ -92,10 +93,3 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-cache
         mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
-    - name: List docker images
-      run: docker images
-
-    - name: Clean-up
-      run: docker logout
-      if: always()
