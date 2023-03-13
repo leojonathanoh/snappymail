@@ -1,0 +1,44 @@
+version: '2'
+services:
+  snappymail:
+    image: leojonathanoh/snappymail:merge
+    ports:
+      - 8888:8888
+    volumes:
+      - snappymail:/var/lib/snappymail
+    networks:
+      - default
+      - db-network
+      - redis-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=snappymail
+      - POSTGRES_PASSWORD=snappymail
+      - POSTGRES_DB=snappymail
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - db-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - redis-network
+    restart: unless-stopped
+
+networks:
+  default:
+  db-network:
+    internal: true
+  redis-network:
+    internal: true
+
+volumes:
+  postgres:
+    driver: local
+  snappymail:
+    driver: local
