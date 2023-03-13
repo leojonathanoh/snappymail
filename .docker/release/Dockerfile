@@ -23,9 +23,6 @@ RUN set -eux; \
 FROM php:8.1-fpm-alpine AS final
 
 LABEL org.label-schema.description="SnappyMail webmail client image using nginx, php-fpm on Alpine"
-LABEL org.opencontainers.image.source=https://github.com/the-djmaze/snappymail
-LABEL org.opencontainers.image.description="SnappyMail"
-LABEL org.opencontainers.image.licenses="AGPL v3.0"
 
 # Install dependencies such as nginx
 RUN apk add --no-cache ca-certificates nginx supervisor bash
