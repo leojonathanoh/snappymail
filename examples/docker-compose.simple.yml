@@ -1,0 +1,18 @@
+version: '2'
+services:
+  snappymail:
+    image: leojonathanoh/snappymail:merge
+    ports:
+      - 8888:8888
+    volumes:
+      - snappymail:/var/lib/snappymail
+    networks:
+      - default
+    restart: unless-stopped
+
+networks:
+  default:
+
+volumes:
+  snappymail:
+    driver: local
