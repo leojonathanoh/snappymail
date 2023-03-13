@@ -28,7 +28,7 @@ find /var/lib/snappymail/ -type d -exec chmod 750 {} \;
 # Create snappymail default config if absent
 SNAPPYMAIL_CONFIG_FILE=/var/lib/snappymail/_data_/_default_/configs/application.ini
 if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
-    echo "[INFO] Creating default Snappymail configuration"
+    echo "[INFO] Creating default Snappymail configuration: $SNAPPYMAIL_CONFIG_FILE"
     # Run snappymail and exit. This populates the snappymail data directory
     su - www-data -s /bin/sh -c 'php /snappymail/index.php' > /dev/null
 fi
@@ -47,6 +47,17 @@ sed 's/^auth_logging = .*/auth_logging = On/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_filename = .*/auth_logging_filename = "auth.log"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_logging_format = .*/auth_logging_format = "[{date:Y-m-d H:i:s}] Auth failed: ip={request:ip} user={imap:login} host={imap:host} port={imap:port}"/' -i $SNAPPYMAIL_CONFIG_FILE
 sed 's/^auth_syslog = .*/auth_syslog = Off/' -i $SNAPPYMAIL_CONFIG_FILE
+
+# Create snappymail admin password if absent
+SNAPPYMAIL_ADMIN_PASSWORD_FILE=/var/lib/snappymail/_data_/_default_/admin_password.txt
+if [ ! -f "$SNAPPYMAIL_ADMIN_PASSWORD_FILE" ]; then
+    (
+        while ! nc -vz -w 1 localhost 8888 > /dev/null 2>&1; do echo "[INFO] Checking whether Snappymail is alive"; sleep 1; done
+        echo "[INFO] Creating Snappymail admin password file: $SNAPPYMAIL_ADMIN_PASSWORD_FILE"
+        wget -qO- 'http://localhost:8888/?/AdminAppData/0/12345/' > /dev/null
+        echo "[INFO] Snappymail Admin Panel ready at http://localhost:8888/?admin. Login using password in $SNAPPYMAIL_ADMIN_PASSWORD_FILE"
+    ) &
+fi
 
 # RUN !
 exec /usr/bin/supervisord -c /supervisor.conf --pidfile /run/supervisord.pid

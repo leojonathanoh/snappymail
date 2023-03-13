@@ -18,7 +18,7 @@ Get the Admin Panel password:
 docker exec -it $( docker-compose -f docker-compose.simple.yml ps -q snappymail ) cat /var/lib/snappymail/_data_/_default_/admin_password.txt
 ```
 
-Now, login to [https://localhost:8888/?admin](https://localhost:8888/?admin) with user `admin` and the admin password.
+Now, login to [http://localhost:8888/?admin](http://localhost:8888/?admin) with user `admin` and the admin password.
 
 ## `docker-compose.mysql.yml`
 
@@ -36,7 +36,7 @@ Get the Admin Panel password:
 docker exec -it $( docker-compose -f docker-compose.mysql.yml ps -q snappymail ) cat /var/lib/snappymail/_data_/_default_/admin_password.txt
 ```
 
-Now, login to [https://localhost:8888/?admin](https://localhost:8888/?admin) with user `admin` and the admin password.
+Now, login to [http://localhost:8888/?admin](http://localhost:8888/?admin) with user `admin` and the admin password.
 
 To setup MySQL as the DB, in Admin Panel, click `Contacts`, check `Enable contacts` and , and under `Storage (PDO)` choose the following:
 
@@ -72,7 +72,7 @@ Get the Admin Panel password:
 docker exec -it $( docker-compose -f docker-compose.postgres.yml ps -q snappymail ) cat /var/lib/snappymail/_data_/_default_/admin_password.txt
 ```
 
-Now, login to [https://localhost:8888/?admin](https://localhost:8888/?admin) with user `admin` and the admin password.
+Now, login to [http://localhost:8888/?admin](http://localhost:8888/?admin) with user `admin` and the admin password.
 
 To use PostgreSQL as the DB, in Admin Panel, click `Contacts`, check `Enable contacts` and , and under `Storage (PDO)` choose the following:
 
