@@ -107,4 +107,5 @@ RUN set -eux; \
 WORKDIR /snappymail
 VOLUME /var/lib/snappymail
 EXPOSE 8888
+EXPOSE 9000
 CMD ["/entrypoint.sh"]
