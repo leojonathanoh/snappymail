@@ -1,7 +1,7 @@
 FROM alpine:3.15 AS builder
+RUN apk add --no-cache php7 php7-json php-phar php-zip
 RUN apk add --no-cache npm
 RUN npm install -g gulp yarn
-RUN apk add --no-cache php7 php7-json php-phar php-zip
 WORKDIR /source
 COPY package.json yarn.lock .
 RUN yarn install
