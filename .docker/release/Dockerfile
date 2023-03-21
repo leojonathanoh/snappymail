@@ -2,9 +2,10 @@ FROM alpine:3.15 AS builder
 RUN apk add --no-cache npm
 RUN npm install -g gulp yarn
 RUN apk add --no-cache php7 php7-json php-phar php-zip
-COPY . /source
 WORKDIR /source
+COPY package.json yarn.lock .
 RUN yarn install
+COPY . .
 # Patch release.php with hotfix from: https://github.com/xgbstar1/snappymail-docker/blob/main/Dockerfile, so that release.php doesn't fail with error
 RUN sed -i 's_^if.*rename.*snappymail.v.0.0.0.*$_if (!!system("mv snappymail/v/0.0.0 snappymail/v/{$package->version}")) {_' cli/release.php  || true
 RUN php release.php
