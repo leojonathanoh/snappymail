@@ -33,8 +33,14 @@ find /var/lib/snappymail/ -type d -exec chmod 750 {} \;
 SNAPPYMAIL_CONFIG_FILE=/var/lib/snappymail/_data_/_default_/configs/application.ini
 if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
     echo "[INFO] Creating default Snappymail configuration: $SNAPPYMAIL_CONFIG_FILE"
-    # Run snappymail and exit. This populates the snappymail data directory
-    su - www-data -s /bin/sh -c 'php /snappymail/index.php' > /dev/null
+    # Run snappymail and exit. This populates the snappymail data directory and generates the config file
+    # On error, print php exception and exit
+    EXITCODE=
+    su - www-data -s /bin/sh -c 'php /snappymail/index.php' > /tmp/out || EXITCODE=$?
+    if [ -n "$EXITCODE" ]; then
+        cat /tmp/out
+        exit "$EXITCODE"
+    fi
 fi
 
 echo "[INFO] Overriding values in snappymail configuration: $SNAPPYMAIL_CONFIG_FILE"
