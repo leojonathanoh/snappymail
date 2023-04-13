@@ -33,6 +33,7 @@ if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
     su - www-data -s /bin/sh -c 'php /snappymail/index.php' > /dev/null
 fi
 
+echo "[INFO] Overriding values in snappymail configuration: $SNAPPYMAIL_CONFIG_FILE"
 # Enable output of snappymail logs
 sed '/^\; Enable logging/{
 N
