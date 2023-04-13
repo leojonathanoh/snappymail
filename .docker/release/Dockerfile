@@ -3,7 +3,7 @@ RUN apk add --no-cache php7 php7-json php-phar php-zip
 RUN apk add --no-cache npm
 RUN npm install -g gulp yarn
 WORKDIR /source
-COPY package.json yarn.lock .
+COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
 # Patch release.php with hotfix from: https://github.com/xgbstar1/snappymail-docker/blob/main/Dockerfile, so that release.php doesn't fail with error
