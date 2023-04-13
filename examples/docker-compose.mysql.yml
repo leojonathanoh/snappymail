@@ -4,6 +4,8 @@ services:
     image: leojonathanoh/snappymail:pr-1
     ports:
       - 8888:8888
+    environment:
+      - DEBUG=true
     volumes:
       - snappymail:/var/lib/snappymail
     networks:
