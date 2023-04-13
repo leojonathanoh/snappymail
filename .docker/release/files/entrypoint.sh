@@ -23,6 +23,8 @@ if [ "${SECURE_COOKIES}" = 'true' ]; then
         } > /usr/local/etc/php/conf.d/cookies.ini;
 fi
 
+echo "[INFO] Snappymail version: $( ls /snappymail/snappymail/v )"
+
 # Set permissions on snappymail data
 echo "[INFO] Setting permissions on /var/lib/snappymail"
 chown -R www-data:www-data /var/lib/snappymail/
