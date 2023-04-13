@@ -55,6 +55,8 @@ services:
       - "traefik.http.services.snappymail.loadbalancer.server.port=8888"
     expose:
       - 8888
+    environment:
+      - DEBUG=true
     volumes:
       - snappymail:/var/lib/snappymail
     networks:
