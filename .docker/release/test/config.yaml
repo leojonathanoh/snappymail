@@ -2,7 +2,7 @@
 # See: https://github.com/GoogleContainerTools/container-structure-test/issues/78
 schemaVersion: 2.0.0
 commandTests:
-  - name: Server starts
+  - name: Integration test
     command: /bin/sh
     args:
       - -c
@@ -14,6 +14,10 @@ commandTests:
           pidof supervisord
           pidof nginx
           pidof php-fpm
+          ls -al /var/lib/snappymail/_data_/_default_/configs/application.ini
+          ls -al /var/lib/snappymail/_data_/_default_/admin_password.txt
+          nc -vz localhost 8888
+          nc -vz localhost 9000
           wget -S -T 3 -O /dev/null http://localhost:8888
           kill `pidof supervisord`
 metadataTest:
@@ -22,4 +26,4 @@ metadataTest:
   entrypoint: []
   cmd: ["/entrypoint.sh"]
   workdir: /snappymail
-  user: ''
+  user: root
