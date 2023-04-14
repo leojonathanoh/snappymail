@@ -1,0 +1,25 @@
+# See: https://github.com/GoogleContainerTools/container-structure-test
+# See: https://github.com/GoogleContainerTools/container-structure-test/issues/78
+schemaVersion: 2.0.0
+commandTests:
+  - name: Server starts
+    command: /bin/sh
+    args:
+      - -c
+      - |
+          /entrypoint.sh > /tmp/out 2>&1 &
+          sleep 5
+          set -eux
+          cat /tmp/out
+          pidof supervisord
+          pidof nginx
+          pidof php-fpm
+          wget -S -T 3 -O /dev/null http://localhost:8888
+          kill `pidof supervisord`
+metadataTest:
+  exposedPorts: ["8888", "9000"]
+  volumes: ["/var/lib/snappymail"]
+  entrypoint: []
+  cmd: ["/entrypoint.sh"]
+  workdir: /snappymail
+  user: ''
