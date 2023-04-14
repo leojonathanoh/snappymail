@@ -3,5 +3,5 @@
 # It is useful for testing release builds in development
 set -eu
 IMAGE=snappymail/snappymail:test
-DOCKER_BUILDX=1 docker buildx build --progress plain --load -t "$IMAGE" -f .docker/release/Dockerfile .
+DOCKER_BUILDX=1 docker build -t "$IMAGE" -f .docker/release/Dockerfile .
 .docker/release/test/test.sh "$IMAGE"
