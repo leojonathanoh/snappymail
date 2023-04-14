@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM alpine:3.15 AS builder
 RUN apk add --no-cache php7 php7-json php-phar php-zip
 RUN apk add --no-cache npm
