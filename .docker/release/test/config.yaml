@@ -7,10 +7,10 @@ commandTests:
     args:
       - -c
       - |
-          /entrypoint.sh > /tmp/out 2>&1 &
-          sleep 5
           set -eux
-          cat /tmp/out
+          DEBUG=true /entrypoint.sh > /tmp/test 2>&1 &
+          sleep 5
+          cat /tmp/test
           pidof supervisord
           pidof nginx
           pidof php-fpm
